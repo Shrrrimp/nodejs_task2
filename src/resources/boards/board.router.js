@@ -21,30 +21,42 @@ router.route('/:id').get(async (req, res) => {
   res.json(board);
 });
 
-router.post('/', validate.validateSchema(schema), (req, res) => {
+router.post('/', validate.validateSchema(schema.postBoard), (req, res) => {
   const board = req.body;
-  console.log(board);
 
   board.id = uuid();
   board.columns.forEach(column => {
     column.id = uuid();
   });
-  console.log(board);
-  boardsService.addUser(board);
 
+  boardsService.addBoard(board);
   res.json(board);
 });
 
-// router.put('/:id', validate.validateSchema(schema), async (req, res) => {
-//   const id = req.params.id;
-//   const userInfo = req.body;
+router.route('/:id').delete(async (req, res) => {
+  const id = req.params.id;
+  const isDeleted = await boardsService.deleteBoard(id);
 
-//   const user = await usersService.editUser(id, userInfo);
+  if (!isDeleted) {
+    res.status(404).json({ message: `Board with id ${id} is not found` });
+  }
+  res.status(204).json({ message: `Board with id ${id} has been deleted` });
+});
 
-//   if (user === undefined) {
-//     res.status(404).json({ message: `User with id ${id} is not found` });
-//   }
-//   res.json(User.toResponse(user));
-// });
+router.put(
+  '/:id',
+  validate.validateSchema(schema.putBoard),
+  async (req, res) => {
+    const id = req.params.id;
+    const boardInfo = req.body;
+
+    const board = await boardsService.editBoard(id, boardInfo);
+
+    if (board === undefined) {
+      res.status(404).json({ message: `Board with id ${id} is not found` });
+    }
+    res.json(board);
+  }
+);
 
 module.exports = router;

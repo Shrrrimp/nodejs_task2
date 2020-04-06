@@ -9,7 +9,7 @@ class Column {
 }
 
 class Board {
-  constructor(id = uuid(), title = 'board1', columns = []) {
+  constructor(id = uuid(), title = 'board1', columns = [new Column()]) {
     this.id = id;
     this.title = title;
     this.columns = columns;

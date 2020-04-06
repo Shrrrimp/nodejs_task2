@@ -25,9 +25,16 @@ const deleteTask = async (boardId, id) => {
   if (!toDelete) return false;
 
   const index = tasks.indexOf(toDelete);
-  console.log(index);
   tasks.splice(index, 1);
   return true;
+};
+
+const deleteAll = async boardId => {
+  const toDelete = await getAll(boardId);
+  toDelete.forEach(task => {
+    const index = tasks.indexOf(task);
+    tasks.splice(index, 1);
+  });
 };
 
 const editTask = async (boardId, id, taskInfo) => {
@@ -35,7 +42,6 @@ const editTask = async (boardId, id, taskInfo) => {
   if (!toEdit) return toEdit;
 
   toEdit.title = taskInfo.title;
-  toEdit.id = taskInfo.id;
   toEdit.order = taskInfo.order;
   toEdit.description = taskInfo.description;
   toEdit.userId = taskInfo.userId;
@@ -45,4 +51,4 @@ const editTask = async (boardId, id, taskInfo) => {
   return toEdit;
 };
 
-module.exports = { getAll, getTask, addTask, deleteTask, editTask };
+module.exports = { getAll, getTask, addTask, deleteTask, editTask, deleteAll };
