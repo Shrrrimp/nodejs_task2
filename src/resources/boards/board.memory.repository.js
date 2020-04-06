@@ -1,7 +1,5 @@
 const Board = require('./board.model');
 
-// TODO: PUT
-
 const boards = [
   new Board.Board(),
   new Board.Board('1', 'board1', [

@@ -21,7 +21,7 @@ router.route('/:id').get(async (req, res) => {
   res.json(User.toResponse(user));
 });
 
-router.post('/', validate.validateSchema(schema), (req, res) => {
+router.post('/', validate.validateSchema(schema.postSchema), (req, res) => {
   const user = req.body;
   user.id = uuid();
   usersService.addUser(user);
@@ -29,16 +29,31 @@ router.post('/', validate.validateSchema(schema), (req, res) => {
   res.json(User.toResponse(user));
 });
 
-router.put('/:id', validate.validateSchema(schema), async (req, res) => {
-  const id = req.params.id;
-  const userInfo = req.body;
+router.put(
+  '/:id',
+  validate.validateSchema(schema.putSchema),
+  async (req, res) => {
+    const id = req.params.id;
+    const userInfo = req.body;
 
-  const user = await usersService.editUser(id, userInfo);
+    const user = await usersService.editUser(id, userInfo);
 
-  if (user === undefined) {
-    res.status(404).json({ message: `User with id ${id} is not found` });
+    if (user === undefined) {
+      res.status(404).json({ message: `User with id ${id} is not found` });
+    }
+    res.json(User.toResponse(user));
   }
-  res.json(User.toResponse(user));
+);
+
+router.route('/:id').delete(async (req, res) => {
+  const id = req.params.id;
+  const isDeleted = await usersService.deleteUser(id);
+
+  if (!isDeleted) {
+    res.status(404).json({ message: `User with id ${id} is not found` });
+  } else {
+    res.sendStatus(204);
+  }
 });
 
 module.exports = router;

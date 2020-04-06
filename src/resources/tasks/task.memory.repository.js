@@ -2,8 +2,8 @@ const Task = require('./task.model');
 const uuid = require('uuid');
 
 const tasks = [
-  new Task.Task(uuid(), 'task2', 1, 'description', null, '1', '1'),
-  new Task.Task(uuid(), 'task3', 1, 'description', null, '1', '2'),
+  new Task.Task(uuid(), 'task2', 1, 'description', '1', '1', '1'),
+  new Task.Task(uuid(), 'task3', 1, 'description', '1', '1', '2'),
   new Task.Task(uuid(), 'task4', 1, 'description', null, '2', '1')
 ];
 
@@ -51,4 +51,17 @@ const editTask = async (boardId, id, taskInfo) => {
   return toEdit;
 };
 
-module.exports = { getAll, getTask, addTask, deleteTask, editTask, deleteAll };
+const updateUserInfo = userId => {
+  const toUpdate = tasks.filter(task => task.userId === userId);
+  toUpdate.forEach(task => (task.userId = null));
+};
+
+module.exports = {
+  getAll,
+  getTask,
+  addTask,
+  deleteTask,
+  editTask,
+  deleteAll,
+  updateUserInfo
+};

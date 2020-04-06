@@ -1,5 +1,4 @@
 const router = require('express').Router();
-// const Board = require('./board.model');
 const boardsService = require('./board.service');
 const schema = require('./board.schema');
 const uuid = require('uuid');
@@ -39,8 +38,9 @@ router.route('/:id').delete(async (req, res) => {
 
   if (!isDeleted) {
     res.status(404).json({ message: `Board with id ${id} is not found` });
+  } else {
+    res.sendStatus(204);
   }
-  res.status(204).json({ message: `Board with id ${id} has been deleted` });
 });
 
 router.put(

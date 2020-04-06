@@ -39,8 +39,9 @@ router.route('/:id').delete(async (req, res) => {
 
   if (!isDeleted) {
     res.status(404).json({ message: `Task with id ${id} is not found` });
+  } else {
+    res.sendStatus(204);
   }
-  res.status(204).json({ message: `Task with id ${id} has been deleted` });
 });
 
 router.put(

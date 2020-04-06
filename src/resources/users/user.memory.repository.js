@@ -1,14 +1,10 @@
 const User = require('./user.model');
-const uuid = require('uuid');
-
-// TODO: PUT
-// TODO: DELETE
 
 const users = [
   new User(),
-  new User(uuid(), 'Ann', 'Ann555', 'password'),
-  new User(uuid(), 'Valya', 'Rat', 'paSSword'),
-  new User(uuid(), 'Alex', 'LOOOGIN', 'PAAAAAssWOOOOrd')
+  new User('1', 'Ann', 'Ann555', 'password'),
+  new User('2', 'Valentine', 'Rat', 'paSSword'),
+  new User('3', 'Alex', 'LOOOGIN', 'PAAAAAssWOOOOrd')
 ];
 
 const getAll = async () => {
@@ -39,4 +35,13 @@ const editUser = async (id, userInfo) => {
   return edited;
 };
 
-module.exports = { getAll, getUser, addUser, editUser };
+const deleteUser = async id => {
+  const toDelete = users.find(user => user.id === id);
+  if (!toDelete) return false;
+
+  const index = users.indexOf(toDelete);
+  users.splice(index, 1);
+  return true;
+};
+
+module.exports = { getAll, getUser, addUser, editUser, deleteUser };
