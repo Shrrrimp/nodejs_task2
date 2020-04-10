@@ -1,0 +1,4 @@
+{"level":"info","message":"    url: /boards/1, method: GET, params: {\"0\":\"/boards/1\"}, body: {}","timestamp":"2020-04-10 19:57:46"}
+{"level":"info","message":"    url: /boards/1/tasks, method: GET, params: {\"0\":\"/boards/1/tasks\"}, body: {}","timestamp":"2020-04-10 19:57:59"}
+{"level":"info","message":"    url: /boards/1/tasks/3a1dec3c-9693-44df-b443-e9ce8d1cfe08, method: GET, params: {\"0\":\"/boards/1/tasks/3a1dec3c-9693-44df-b443-e9ce8d1cfe08\"}, body: {}","timestamp":"2020-04-10 19:58:20"}
+
