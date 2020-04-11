@@ -1,1 +1,7 @@
-
+{"message":"   Server Error","level":"error","timestamp":"2020-04-11 15:42:04"}
+{"message":"   Board with id 10 is not found","level":"error","timestamp":"2020-04-11 15:42:37"}
+{"message":"   Bad Request","level":"error","timestamp":"2020-04-11 15:58:31"}
+{"message":"   Bad Request","level":"error","timestamp":"2020-04-11 16:00:16"}
+{"message":"   Unexpected token } in JSON at position 43","level":"error","timestamp":"2020-04-11 16:00:35"}
+{"message":"   Board with id 10 is not found","level":"error","timestamp":"2020-04-11 16:03:05"}
+{"message":"   User with id 10 is not found","level":"error","timestamp":"2020-04-11 17:24:57"}

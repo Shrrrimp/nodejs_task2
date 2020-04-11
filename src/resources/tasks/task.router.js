@@ -3,24 +3,33 @@ const tasksService = require('./task.service');
 const schema = require('./task.schema');
 const uuid = require('uuid');
 const validate = require('../../helpers/validation');
+const { ErrorHandler } = require('../../helpers/error-handler');
+const { catchErrors } = require('../../helpers/catch-errors');
 
-router.route('/').get(async (req, res) => {
-  const boardId = req.params.boardId;
-  const tasks = await tasksService.getAll(boardId);
+router.route('/').get(
+  catchErrors(async (req, res) => {
+    const boardId = req.params.boardId;
+    const tasks = await tasksService.getAll(boardId);
+    if (!tasks.length) {
+      throw new ErrorHandler(401, 'Access token is missing or invalid');
+    }
 
-  res.json(tasks);
-});
+    res.json(tasks);
+  })
+);
 
-router.route('/:id').get(async (req, res) => {
-  const id = req.params.id;
-  const boardId = req.params.boardId;
-  const task = await tasksService.getTask(boardId, id);
+router.route('/:id').get(
+  catchErrors(async (req, res) => {
+    const id = req.params.id;
+    const boardId = req.params.boardId;
+    const task = await tasksService.getTask(boardId, id);
 
-  if (task === undefined) {
-    res.status(404).json({ message: `Task with id ${id} is not found` });
-  }
-  res.json(task);
-});
+    if (task === undefined) {
+      throw new ErrorHandler(404, `Task with id ${id} is not found`);
+    }
+    res.json(task);
+  })
+);
 
 router.post('/', validate.validateSchema(schema.postSchema), (req, res) => {
   const task = req.body;
@@ -32,22 +41,24 @@ router.post('/', validate.validateSchema(schema.postSchema), (req, res) => {
   res.json(task);
 });
 
-router.route('/:id').delete(async (req, res) => {
-  const id = req.params.id;
-  const boardId = req.params.boardId;
-  const isDeleted = await tasksService.deleteTask(boardId, id);
+router.route('/:id').delete(
+  catchErrors(async (req, res) => {
+    const id = req.params.id;
+    const boardId = req.params.boardId;
+    const isDeleted = await tasksService.deleteTask(boardId, id);
 
-  if (!isDeleted) {
-    res.status(404).json({ message: `Task with id ${id} is not found` });
-  } else {
-    res.sendStatus(204);
-  }
-});
+    if (!isDeleted) {
+      throw new ErrorHandler(404, `Task with id ${id} is not found`);
+    } else {
+      res.sendStatus(204);
+    }
+  })
+);
 
 router.put(
   '/:id',
   validate.validateSchema(schema.putSchema),
-  async (req, res) => {
+  catchErrors(async (req, res) => {
     const id = req.params.id;
     const boardId = req.params.boardId;
     const taskInfo = req.body;
@@ -55,10 +66,10 @@ router.put(
     const task = await tasksService.editTask(boardId, id, taskInfo);
 
     if (task === undefined) {
-      res.status(404).json({ message: `Task with id ${id} is not found` });
+      throw new ErrorHandler(404, `Task with id ${id} is not found`);
     }
     res.json(task);
-  }
+  })
 );
 
 module.exports = router;
