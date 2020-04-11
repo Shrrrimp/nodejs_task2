@@ -23,9 +23,9 @@ app.use('/', (req, res, next) => {
 });
 
 app.use('*', (req, res, next) => {
-  const { originalUrl, method, params, body } = req;
+  const { originalUrl, method, query, body } = req;
   const message = `url: ${originalUrl}, method: ${method}, params: ${JSON.stringify(
-    params
+    query
   )}, body: ${JSON.stringify(body)}`;
 
   logger.log('info', message);
