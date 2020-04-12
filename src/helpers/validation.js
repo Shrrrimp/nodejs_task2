@@ -1,12 +1,11 @@
+const { ErrorHandler } = require('../helpers/error-handler');
+
 const errorResponse = schemaErrors => {
   const errors = schemaErrors.map(error => {
-    const { path, message } = error;
-    return { path, message };
+    const { message } = error;
+    return message;
   });
-  return {
-    status: 'failed',
-    errors
-  };
+  return errors;
 };
 
 const validateSchema = schema => {
@@ -17,7 +16,7 @@ const validateSchema = schema => {
     });
 
     if (error) {
-      res.status(400).json(errorResponse(error.details));
+      throw new ErrorHandler(400, errorResponse(error.details));
     } else {
       // eslint-disable-next-line callback-return
       next();

@@ -1,0 +1,4 @@
+{"statusCode":500,"message":"Oops!","level":"error","timestamp":"2020-04-12 17:50:55"}
+{"statusCode":404,"message":"User with id 10 is not found","level":"error","timestamp":"2020-04-12 17:57:08"}
+{"statusCode":400,"message":"Unexpected token \n in JSON at position 64","level":"error","timestamp":"2020-04-12 17:58:36"}
+{"statusCode":400,"message":"\"login\" is required,\"password\" is required","level":"error","timestamp":"2020-04-12 18:10:24"}

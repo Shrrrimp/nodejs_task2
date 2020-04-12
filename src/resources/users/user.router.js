@@ -4,22 +4,31 @@ const usersService = require('./user.service');
 const schema = require('./user.schema');
 const uuid = require('uuid');
 const validate = require('../../helpers/validation');
+const { ErrorHandler } = require('../../helpers/error-handler');
+const { catchErrors } = require('../../helpers/catch-errors');
 
-router.route('/').get(async (req, res) => {
-  const users = await usersService.getAll();
+router.route('/').get(
+  catchErrors(async (req, res) => {
+    const users = await usersService.getAll();
+    if (!users.length) {
+      throw new ErrorHandler(401, 'Access token is missing or invalid');
+    }
 
-  res.json(users.map(User.toResponse));
-});
+    res.json(users.map(User.toResponse));
+  })
+);
 
-router.route('/:id').get(async (req, res) => {
-  const id = req.params.id;
-  const user = await usersService.getUser(id);
+router.route('/:id').get(
+  catchErrors(async (req, res) => {
+    const id = req.params.id;
+    const user = await usersService.getUser(id);
 
-  if (user === undefined) {
-    res.status(404).json({ message: `User with id ${id} is not found` });
-  }
-  res.json(User.toResponse(user));
-});
+    if (user === undefined) {
+      throw new ErrorHandler(404, `User with id ${id} is not found`);
+    }
+    res.json(User.toResponse(user));
+  })
+);
 
 router.post('/', validate.validateSchema(schema.postSchema), (req, res) => {
   const user = req.body;
@@ -32,28 +41,30 @@ router.post('/', validate.validateSchema(schema.postSchema), (req, res) => {
 router.put(
   '/:id',
   validate.validateSchema(schema.putSchema),
-  async (req, res) => {
+  catchErrors(async (req, res) => {
     const id = req.params.id;
     const userInfo = req.body;
 
     const user = await usersService.editUser(id, userInfo);
 
     if (user === undefined) {
-      res.status(404).json({ message: `User with id ${id} is not found` });
+      throw new ErrorHandler(404, `User with id ${id} is not found`);
     }
     res.json(User.toResponse(user));
-  }
+  })
 );
 
-router.route('/:id').delete(async (req, res) => {
-  const id = req.params.id;
-  const isDeleted = await usersService.deleteUser(id);
+router.route('/:id').delete(
+  catchErrors(async (req, res) => {
+    const id = req.params.id;
+    const isDeleted = await usersService.deleteUser(id);
 
-  if (!isDeleted) {
-    res.status(404).json({ message: `User with id ${id} is not found` });
-  } else {
-    res.sendStatus(204);
-  }
-});
+    if (!isDeleted) {
+      throw new ErrorHandler(404, `User with id ${id} is not found`);
+    } else {
+      res.sendStatus(204);
+    }
+  })
+);
 
 module.exports = router;
