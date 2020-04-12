@@ -4,13 +4,14 @@ const logger = createLogger({
   level: 'silly',
   format: format.combine(
     format.colorize(),
-    format.cli(),
     format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss'
     })
   ),
   transports: [
-    new transports.Console(),
+    new transports.Console({
+      format: format.combine(format.colorize(), format.cli())
+    }),
     new transports.File({
       filename: 'logs/error.log',
       level: 'error',
