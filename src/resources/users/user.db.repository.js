@@ -13,7 +13,10 @@ const addUser = async user => {
 };
 
 const editUser = async (id, userInfo) => {
-  return User.updateOne({ _id: userInfo.id }, userInfo);
+  return User.findByIdAndUpdate({ _id: id }, userInfo, {
+    new: true,
+    useFindAndModify: false
+  });
 };
 
 const deleteUser = async id => {

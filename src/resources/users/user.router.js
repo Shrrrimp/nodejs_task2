@@ -2,7 +2,6 @@ const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
 const schema = require('./user.schema');
-// const uuid = require('uuid');
 const validate = require('../../helpers/validation');
 const { ErrorHandler } = require('../../helpers/error-handler');
 const { catchErrors } = require('../../helpers/catch-errors');
@@ -26,8 +25,8 @@ router.route('/:id').get(
     if (!user) {
       throw new ErrorHandler(404, `User with id ${id} is not found`);
     }
+
     res.json(User.toResponse(user));
-    res.json(user);
   })
 );
 
@@ -35,7 +34,6 @@ router.post(
   '/',
   validate.validateSchema(schema.postSchema),
   async (req, res) => {
-    // user.id = uuid();
     const user = await usersService.addUser(req.body);
 
     res.json(User.toResponse(user));
@@ -51,7 +49,7 @@ router.put(
 
     const user = await usersService.editUser(id, userInfo);
 
-    if (user === undefined) {
+    if (!user) {
       throw new ErrorHandler(404, `User with id ${id} is not found`);
     }
     res.json(User.toResponse(user));
