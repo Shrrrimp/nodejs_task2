@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const boardsService = require('./board.service');
+const Board = require('./board.model');
 const schema = require('./board.schema');
-const uuid = require('uuid');
 const validate = require('../../helpers/validation');
 const { ErrorHandler } = require('../../helpers/error-handler');
 const { catchErrors } = require('../../helpers/catch-errors');
@@ -13,7 +13,7 @@ router.route('/').get(
       throw new ErrorHandler(401, 'Access token is missing or invalid');
     }
 
-    res.json(boards);
+    res.json(boards.map(Board.toResponse));
   })
 );
 
@@ -22,24 +22,22 @@ router.route('/:id').get(
     const id = req.params.id;
     const board = await boardsService.getBoard(id);
 
-    if (board === undefined) {
+    if (!board) {
       throw new ErrorHandler(404, `Board with id ${id} is not found`);
     }
-    res.json(board);
+    res.json(Board.toResponse(board));
   })
 );
 
-router.post('/', validate.validateSchema(schema.postBoard), (req, res) => {
-  const board = req.body;
+router.post(
+  '/',
+  validate.validateSchema(schema.postBoard),
+  async (req, res) => {
+    const board = await boardsService.addBoard(req.body);
 
-  board.id = uuid();
-  board.columns.forEach(column => {
-    column.id = uuid();
-  });
-
-  boardsService.addBoard(board);
-  res.json(board);
-});
+    res.json(Board.toResponse(board));
+  }
+);
 
 router.route('/:id').delete(
   catchErrors(async (req, res) => {
@@ -63,10 +61,10 @@ router.put(
 
     const board = await boardsService.editBoard(id, boardInfo);
 
-    if (board === undefined) {
+    if (!board) {
       throw new ErrorHandler(404, `Board with id ${id} is not found`);
     }
-    res.json(board);
+    res.json(Board.toResponse(board));
   })
 );
 
