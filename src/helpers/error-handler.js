@@ -21,7 +21,10 @@ const handleError = (err, res) => {
     return;
   }
 
-  logger.error(getStatusText(INTERNAL_SERVER_ERROR));
+  logger.error({
+    statusCode: 500,
+    message: `${getStatusText(INTERNAL_SERVER_ERROR)}, ${message}`
+  });
   res.status(INTERNAL_SERVER_ERROR).send(getStatusText(INTERNAL_SERVER_ERROR));
 };
 
