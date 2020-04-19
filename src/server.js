@@ -8,7 +8,7 @@ process
   .on('uncaughtException', err => {
     logger.error({ statusCode: 500, message: err.message });
     const { exit } = process;
-    exit(1);
+    setTimeout(() => exit(1), 100);
   });
 
 const { PORT } = require('./common/config');
