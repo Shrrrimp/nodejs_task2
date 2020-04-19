@@ -1,7 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
 const tasksService = require('./task.service');
+const Task = require('./task.model');
 const schema = require('./task.schema');
-const uuid = require('uuid');
 const validate = require('../../helpers/validation');
 const { ErrorHandler } = require('../../helpers/error-handler');
 const { catchErrors } = require('../../helpers/catch-errors');
@@ -10,11 +10,8 @@ router.route('/').get(
   catchErrors(async (req, res) => {
     const boardId = req.params.boardId;
     const tasks = await tasksService.getAll(boardId);
-    if (!tasks.length) {
-      throw new ErrorHandler(401, 'Access token is missing or invalid');
-    }
 
-    res.json(tasks);
+    res.json(tasks.map(Task.toResponse));
   })
 );
 
@@ -24,22 +21,25 @@ router.route('/:id').get(
     const boardId = req.params.boardId;
     const task = await tasksService.getTask(boardId, id);
 
-    if (task === undefined) {
+    if (!task) {
       throw new ErrorHandler(404, `Task with id ${id} is not found`);
     }
-    res.json(task);
+    res.json(Task.toResponse(task));
   })
 );
 
-router.post('/', validate.validateSchema(schema.postSchema), (req, res) => {
-  const task = req.body;
-  const boardId = req.params.boardId;
+router.post(
+  '/',
+  validate.validateSchema(schema.postSchema),
+  async (req, res) => {
+    const data = req.body;
+    const boardId = req.params.boardId;
 
-  task.id = uuid();
-  task.boardId = boardId;
-  tasksService.addTask(task);
-  res.json(task);
-});
+    data.boardId = boardId;
+    const task = await tasksService.addTask(data);
+    res.json(Task.toResponse(task));
+  }
+);
 
 router.route('/:id').delete(
   catchErrors(async (req, res) => {
@@ -62,13 +62,14 @@ router.put(
     const id = req.params.id;
     const boardId = req.params.boardId;
     const taskInfo = req.body;
+    taskInfo.boardId = boardId;
 
-    const task = await tasksService.editTask(boardId, id, taskInfo);
+    const task = await tasksService.editTask(id, taskInfo);
 
-    if (task === undefined) {
+    if (!task) {
       throw new ErrorHandler(404, `Task with id ${id} is not found`);
     }
-    res.json(task);
+    res.json(Task.toResponse(task));
   })
 );
 
