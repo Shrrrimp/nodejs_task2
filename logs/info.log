@@ -1,5 +1,0 @@
-{"level":"info","message":"url: /users/10, method: GET, params: {}, body: {}","timestamp":"2020-04-12 13:28:34"}
-{"message":"User with id 10 is not found","level":"error","timestamp":"2020-04-12 13:28:34"}
-{"message":"Unexpected token \n in JSON at position 103","level":"error","timestamp":"2020-04-12 13:29:46"}
-{"level":"info","message":"url: /boards, method: GET, params: {}, body: {}","timestamp":"2020-04-12 13:30:13"}
-{"level":"info","message":"url: /boards/1, method: GET, params: {}, body: {}","timestamp":"2020-04-12 13:30:35"}
