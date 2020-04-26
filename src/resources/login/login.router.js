@@ -15,7 +15,7 @@ router.post(
     );
 
     const token = await user.generateAuthToken();
-    res.json(token);
+    res.json({ token });
   })
 );
 

@@ -3,20 +3,7 @@ const Board = require('../resources/boards/board.model');
 const Task = require('../resources/tasks/task.model');
 
 const users = [
-  new User({ name: 'user1', login: 'admin', password: 'admin', _id: '1' }),
-  new User({ name: 'user2', login: 'Ann555', password: 'password', _id: '2' }),
-  new User({
-    name: 'user3',
-    login: 'Valentine',
-    password: 'paSSword',
-    _id: '3'
-  }),
-  new User({
-    name: 'user4',
-    login: 'LOOOGIN',
-    password: 'PAAAAAssWOOOOrd',
-    _id: '4'
-  })
+  new User({ name: 'user1', login: 'admin', password: 'admin', _id: '1' })
 ];
 
 const boards = [
