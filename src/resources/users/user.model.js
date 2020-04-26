@@ -7,7 +7,6 @@ const { ErrorHandler } = require('../../helpers/error-handler');
 const userSchema = new mongoose.Schema(
   {
     name: String,
-    // login: { type: String, unique: true },
     login: String,
     password: String,
     _id: {

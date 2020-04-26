@@ -33,11 +33,11 @@ router.route('/:id').get(
 router.post(
   '/',
   validate.validateSchema(schema.postSchema),
-  async (req, res) => {
+  catchErrors(async (req, res) => {
     const user = await usersService.addUser(req.body);
 
     res.json(User.toResponse(user));
-  }
+  })
 );
 
 router.put(
