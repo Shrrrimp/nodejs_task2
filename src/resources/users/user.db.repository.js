@@ -23,4 +23,17 @@ const deleteUser = async id => {
   return (await User.deleteOne({ _id: id })).deletedCount;
 };
 
-module.exports = { getAll, getUser, addUser, editUser, deleteUser };
+const isLoginExist = async login => {
+  const user = await User.findOne({ login }).exec();
+  if (user) return true;
+  return false;
+};
+
+module.exports = {
+  getAll,
+  getUser,
+  addUser,
+  editUser,
+  deleteUser,
+  isLoginExist
+};

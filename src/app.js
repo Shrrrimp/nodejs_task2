@@ -5,6 +5,8 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
+const loginRouter = require('./resources/login/login.router');
+const checkToken = require('./resources/login/login.middleware');
 const { logger } = require('./helpers/logger');
 const { handleError } = require('./helpers/error-handler');
 const app = express();
@@ -32,9 +34,10 @@ app.use('*', (req, res, next) => {
   next();
 });
 
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
-app.use('/boards/:boardId/tasks', taskRouter);
+app.use('/users', checkToken, userRouter);
+app.use('/boards', checkToken, boardRouter);
+app.use('/boards/:boardId/tasks', checkToken, taskRouter);
+app.use('/login', loginRouter);
 
 app.use((err, req, res, next) => {
   handleError(err, res);
