@@ -1,10 +1,13 @@
+/* eslint-disable require-atomic-updates */
 const usersRepo = require('./user.db.repository');
 const taskService = require('../tasks/task.service');
 const bcrypt = require('bcrypt');
 const { ErrorHandler } = require('../../helpers/error-handler');
+const SALT_ROUNDS = 8;
 
 const getAll = () => usersRepo.getAll();
 const getUser = id => usersRepo.getUser(id);
+
 const addUser = async user => {
   const isLoginAlreadyExist = await usersRepo.isLoginExist(user.login);
   if (isLoginAlreadyExist) {
@@ -12,11 +15,12 @@ const addUser = async user => {
   }
   return usersRepo.addUser(user);
 };
+
 const editUser = async (id, userInfo) => {
-  // eslint-disable-next-line require-atomic-updates
-  userInfo.password = await bcrypt.hash(userInfo.password, 8);
+  userInfo.password = await bcrypt.hash(userInfo.password, SALT_ROUNDS);
   return usersRepo.editUser(id, userInfo);
 };
+
 const deleteUser = async id => {
   await taskService.updateUserInfo(id);
   return usersRepo.deleteUser(id);

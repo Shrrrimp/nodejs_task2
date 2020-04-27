@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { ErrorHandler } = require('../../helpers/error-handler');
+const SALT_ROUNDS = 8;
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre('save', async function encryptPassword(next) {
   const user = this;
   if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
+    user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   }
   next();
 });

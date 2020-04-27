@@ -8,7 +8,6 @@ router.post(
   '/',
   validate.validateSchema(schema.postSchema),
   catchErrors(async (req, res) => {
-    console.log(req.body);
     const user = await loginService.checkCredentials(
       req.body.login,
       req.body.password
